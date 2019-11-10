@@ -15,8 +15,18 @@ const defaultState = {
     comments
 };
 
+
+
 const store = createStore(rootReducer, defaultState);
 
 export const history = syncHistoryWithStore(browserHistory, store);
+
+// this below is in order to perform hard reload when reducers codes changes happen
+if (module.hot) {
+    module.hot.accept("./reducers", () => {
+        const nextRootReducer = require("./reducers/index").default;
+        store.replaceReducer(nextRootReducer);
+    });
+}
 
 export default store;
